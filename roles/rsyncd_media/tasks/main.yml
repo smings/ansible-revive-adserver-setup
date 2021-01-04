@@ -1,0 +1,37 @@
+---
+
+- name: "Adding gateway webapp user"
+  become: yes
+  user:
+    name: "{{ gateway_webapp.user }}"
+
+- name: "Creating media directory"
+  become: yes
+  file:
+    path: "{{ nginx.document_root }}"
+    state: directory
+    owner: "{{ gateway_webapp.user }}"
+
+- name: "Installing rsyncd config file"
+  become: yes
+  template:
+    src: rsyncd_media.conf.j2
+    dest: /etc/rsyncd.conf
+
+- name: "(Centos) (Re-)starting rsyncd service"
+  become: yes
+  systemd:
+    name: rsyncd
+    daemon_reload: yes
+    enabled: yes
+    state: restarted
+  when: ansible_facts['distribution'] == "CentOS"
+
+- name: "(Debian) (Re-)starting rsync service"
+  become: yes
+  systemd:
+    name: rsync
+    daemon_reload: yes
+    enabled: yes
+    state: restarted
+  when: ansible_facts['distribution'] == "Debian"

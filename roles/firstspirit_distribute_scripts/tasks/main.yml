@@ -1,0 +1,15 @@
+---
+- name: create script directory
+  file:
+    path: "{{ hostvars[inventory_hostname].firstspirit_base_directory }}/script"
+    state: directory
+    owner: "{{ hostvars[inventory_hostname].firstspirit_user }}"
+    group: "{{ hostvars[inventory_hostname].firstspirit_user }}"
+- name: copy scripts
+  become: yes
+  copy:
+    src: scripts/
+    dest: "{{ hostvars[inventory_hostname].firstspirit_base_directory }}/script/"
+    mode: preserve
+    owner: "{{ hostvars[inventory_hostname].firstspirit_user }}"
+    group: "{{ hostvars[inventory_hostname].firstspirit_user }}"

@@ -1,0 +1,16 @@
+---
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+ansible_ssh_host: 127.0.0.1
+ansible_ssh_port: 2201
+ansible_ssh_user: vagrant
+ansible_ssh_private_key_file: ".vagrant/machines/centos/virtualbox/private_key"
+app_user: "root"
+bind_ip: "10.10.10.20"
+# Overriding the global number of 3 expected servers as set in ~/group/vars/all/config.yml
+# in our VMs, all we need is 1
+consul_bootstrap_expect: 1
+java_home: "/usr/lib/jvm/jre-11"
+nginx_server_names: 
+  - "lmwr-edge01.test-server.ag"
+  - "lmwr.test-server.ag"
+profile: "local"

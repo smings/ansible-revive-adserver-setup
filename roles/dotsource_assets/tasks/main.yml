@@ -1,0 +1,17 @@
+---
+## Copies the dotsource assets onto the file server assets directory
+
+# TODO rsync exclude "{{ frontend.assets_directory }}/app.js" and set `delete: yes`
+
+- name: "rsync dotsource repository on edge server"
+  become: yes
+  become_user: "{{ gateway_webapp.user }}"
+  synchronize:
+    delete: no
+    src: "{{ dotsource.directory_path_jenkins }}"
+    dest: "{{ nginx.document_root }}/assets"
+    owner: no
+    rsync_opts:
+      - "--exclude=js/app.js"
+      - "--exclude=styleguide"
+      - "--exclude=.git*"

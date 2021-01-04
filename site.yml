@@ -1,0 +1,70 @@
+---
+
+- name: "Provisioning SSH keys"
+  hosts: prod
+  roles:
+    - ssh_keys
+
+- name: "Provisioning common packages and settings"
+  hosts: all
+  roles:
+    - common
+
+- name: "Provisioning consul"
+  hosts: appserver,solr_indexer,solr,&dev
+  roles:
+    - consul
+
+- name: "Provisioning java"
+  hosts: appserver,solr_indexer,firstSpirit,&dev
+  roles:
+    - java
+
+- name: "Provisioning nginx"
+  hosts: gateway,&dev
+  roles:
+    - nginx
+
+- name: "Provisioning docker"
+  hosts: monitoring,solr,&dev
+  roles:
+    - docker
+
+- name: "Provisioning monitoring"
+  hosts: monitoring,&dev
+  roles:
+    - monitoring
+
+- name: "Provisioning rsyncd_content"
+  hosts: solr_indexer,webapp,&dev
+  roles:
+    - rsyncd_content
+
+- name: "Provisioning solr"
+  hosts: solr,&dev
+  roles:
+    - solr
+
+- name: "Provisioning webapp"
+  hosts: webapp,firstSpirit,&dev
+  roles:
+    - webapp
+
+- name: "Provisioning rsyncd_media and gateway webapp"
+  hosts: gateway,&dev
+  roles:
+    - rsyncd_media
+    - gateway
+    - frontend
+
+- name: "Provisioning solr_indexer"
+  hosts: solr_indexer,&dev
+  roles:
+    - solr_indexer
+    - solr_config_distribution
+
+- name: "Distributing rsync scripts to firstspirit server"
+  hosts: firstSpirit,&dev
+  roles:
+    - firstspirit_distribute_scripts
+

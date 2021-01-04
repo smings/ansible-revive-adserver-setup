@@ -1,0 +1,31 @@
+[
+    {
+        "fairIdentifier": "whitelabel",
+        "domains": [
+            "lmwr.test-server.ag",
+            "lmwr-edge01.test-server.ag"
+        ],
+        "collection": "whitelabel",
+        "nfmIds": [
+            -1
+        ],
+        "languages": [
+            "de",
+            "en"
+        ]
+    },
+    {
+        "fairIdentifier": "efa",
+        "domains": [
+            "www.efa.de"
+        ],
+        "collection": "efa",
+        "nfmIds": [
+            1328
+        ],
+        "languages": [
+            "de",
+            "en"
+        ]
+    }
+]

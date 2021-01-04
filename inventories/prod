@@ -1,0 +1,9 @@
+all:
+  hosts:
+
+  children:
+    prod:
+      children:
+        adserver:
+          hosts:
+            lmrv:

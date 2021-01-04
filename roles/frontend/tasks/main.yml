@@ -1,0 +1,17 @@
+---
+# Copies the frontend assets to the file server assets directory
+# Current version does not use nexus etc. and expects an already finished build in an adjacent lmwr-frontend directory
+
+# TODO refactor to only copy "{{ frontend.assets_directory }}/js/app.js"
+
+- name: "Copying asset files to file server assets directory"
+  become: yes
+  become_user: "{{ gateway_webapp.user }}"
+  synchronize:
+    delete: no
+    src: "{{ frontend.assets_directory }}/"
+    dest: "{{ nginx.document_root }}/assets"
+    owner: no
+    rsync_opts:
+      - "--exclude=*.html"
+      - "--exclude=favicon.ico"

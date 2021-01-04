@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_17wnwhk" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.4.0">
+  <bpmn:collaboration id="Collaboration_12bkb8p">
+    <bpmn:participant id="Participant_06ne6up" name="Set up EC2 instance" processRef="Process_1ggdf0u" />
+    <bpmn:participant id="Participant_0v8pd7n" processRef="Process_0e474uf" />
+    <bpmn:participant id="Participant_1wy56o8" name="Set up DNS" processRef="Process_1t1gby4" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1ggdf0u" isExecutable="true">
+    <bpmn:startEvent id="Event_1ynrctm">
+      <bpmn:outgoing>Flow_09icefy</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Activity_1lgfpwe" name="Log into AWS">
+      <bpmn:incoming>Flow_09icefy</bpmn:incoming>
+      <bpmn:outgoing>Flow_0gl93qy</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_05gksxy" name="Switch to Region of your choice">
+      <bpmn:incoming>Flow_0gl93qy</bpmn:incoming>
+      <bpmn:outgoing>Flow_168i17i</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_0r05889" name="Switch to Service EC2">
+      <bpmn:incoming>Flow_168i17i</bpmn:incoming>
+      <bpmn:outgoing>Flow_0e4y691</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_1obi6zn" name="Do you have an available Elastic IP address?&#10;&#10;">
+      <bpmn:incoming>Flow_0e4y691</bpmn:incoming>
+      <bpmn:outgoing>Flow_1xwsun5</bpmn:outgoing>
+      <bpmn:outgoing>Flow_19q07wq</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Activity_0z4c1zc" name="Switch into &#34;Elastic IPs&#34;">
+      <bpmn:incoming>Flow_1xwsun5</bpmn:incoming>
+      <bpmn:outgoing>Flow_0g992m5</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_0p5knlc" name="Allocate a new Elastic IP address">
+      <bpmn:incoming>Flow_0g992m5</bpmn:incoming>
+      <bpmn:outgoing>Flow_1laji6n</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="Gateway_1tsccbs">
+      <bpmn:incoming>Flow_1laji6n</bpmn:incoming>
+      <bpmn:incoming>Flow_19q07wq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ncezvf</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="Activity_17dthi6" name="Go to &#34;Instances&#34; and launch a new instance">
+      <bpmn:documentation>Go to `Instances` and click on `Launch Instances`
+
+1. **Choose AMI**: Choose `Ubuntu Server 20.04 LTS (HVM), SSD Volume Type` as operating system and disk typ. Leave the radio button on the right set to `64-bit (x86)`. Click on `Select`
+2. **Choose an instance** type of your choosing. In this documentation I'll use a `t3a.small` instance. Afterwards click on `next`. Click on `Next`
+3. **Configure Instance Details**
+   1. Number of instances: `1` (Default)
+   2. Purchasing options: `unchecked` (Default)
+   3. Network: Choose a VPC of your choice. I stayed with my default VPC  (Default)
+   4. Subnet: Choose a subnet in an availability zone (AZ) of your choice or simply leave it up to chance.  (Default)
+   5. Auto-assign Public IP: `don't change` (Default)
+   6. Placement group: `unchecked` (Default)
+   7. Capacity Reservation: `open` (Default)
+   8. Domain jon Directory: `No directory`  (Default) - if you want to, you can set up directories here
+   9. IAM role: `none`  (Default) - if you want to, you can assign IAM roles to the instance, but I have no specific use for this
+   10. CPU options: `unchecked` (Default)
+   11. Shutdown behavior: `stop` (Default)
+   12. Stop - Hibernate behavior: `unchecked` (Default)
+   13. Enable termination protection: `checked` - you don't want to accidentally delete the instance
+   14. Monitoring: `unchecked` (Default) - do whatever pleases you, I don't cover monitoring in this project
+   15. EBS-optimized Instance: (Default) If you choose other instances, you might do sthg with this option
+   16. Tenancy: `shared - Run a shared hardware Instance` this setting depends on your personal performance requirements. 
+   17. Credit specification: `checked` (default)
+   18. File systems: `none added`  - set it up to your individual needs
+   19. No changes in the `Advanced Details` Section
+4. **Add Storage**: I set it to `20 GB` with nothing else changed.
+5. **Add Tags**: Add tags according to your needs
+6. **Configure Security Group**: 
+   Create a new security group (SG) or select one that allows for SSH access (port 22) from your IP address, HTTP and HTTPs access (Ports 80 &amp; 443) for the inbound rules. 
+   You are strongly advised to secure port 22 to only be accessible from static IP addresses of your choosing. If you use dynamic IP addresses, adjust the SG rule before you access the instance
+7. **Review**
+8. **Launch**:
+   Choose or create a keypair and launch the instance
+
+
+
+
+
+
+
+
+
+
+
+
+
+</bpmn:documentation>
+      <bpmn:incoming>Flow_0ncezvf</bpmn:incoming>
+      <bpmn:outgoing>Flow_1i6e50b</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_0mfms5v" name="Associate Elastic IP address with instance">
+      <bpmn:documentation>Go to `Elastic IPs`, choose an available IP and associate it with your newly created instance</bpmn:documentation>
+      <bpmn:incoming>Flow_1i6e50b</bpmn:incoming>
+      <bpmn:outgoing>Flow_1hnjfiv</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_1vb8h2c">
+      <bpmn:incoming>Flow_1hnjfiv</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_09icefy" sourceRef="Event_1ynrctm" targetRef="Activity_1lgfpwe" />
+    <bpmn:sequenceFlow id="Flow_0gl93qy" sourceRef="Activity_1lgfpwe" targetRef="Activity_05gksxy" />
+    <bpmn:sequenceFlow id="Flow_168i17i" sourceRef="Activity_05gksxy" targetRef="Activity_0r05889" />
+    <bpmn:sequenceFlow id="Flow_0e4y691" sourceRef="Activity_0r05889" targetRef="Gateway_1obi6zn" />
+    <bpmn:sequenceFlow id="Flow_1xwsun5" name="no" sourceRef="Gateway_1obi6zn" targetRef="Activity_0z4c1zc" />
+    <bpmn:sequenceFlow id="Flow_0g992m5" sourceRef="Activity_0z4c1zc" targetRef="Activity_0p5knlc" />
+    <bpmn:sequenceFlow id="Flow_1laji6n" sourceRef="Activity_0p5knlc" targetRef="Gateway_1tsccbs" />
+    <bpmn:sequenceFlow id="Flow_19q07wq" name="ja" sourceRef="Gateway_1obi6zn" targetRef="Gateway_1tsccbs" />
+    <bpmn:sequenceFlow id="Flow_0ncezvf" sourceRef="Gateway_1tsccbs" targetRef="Activity_17dthi6" />
+    <bpmn:sequenceFlow id="Flow_1i6e50b" sourceRef="Activity_17dthi6" targetRef="Activity_0mfms5v" />
+    <bpmn:sequenceFlow id="Flow_1hnjfiv" sourceRef="Activity_0mfms5v" targetRef="Event_1vb8h2c" />
+  </bpmn:process>
+  <bpmn:process id="Process_0e474uf" isExecutable="false">
+    <bpmn:startEvent id="Event_0rnkvgt">
+      <bpmn:outgoing>Flow_1pdkzmo</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:subProcess id="Activity_0ascy4d" name="Set up EC2 Instance">
+      <bpmn:incoming>Flow_1pdkzmo</bpmn:incoming>
+      <bpmn:outgoing>Flow_1pbiaha</bpmn:outgoing>
+    </bpmn:subProcess>
+    <bpmn:subProcess id="Activity_0myn174" name="Set up DNS">
+      <bpmn:incoming>Flow_1pbiaha</bpmn:incoming>
+    </bpmn:subProcess>
+    <bpmn:sequenceFlow id="Flow_1pdkzmo" sourceRef="Event_0rnkvgt" targetRef="Activity_0ascy4d" />
+    <bpmn:sequenceFlow id="Flow_1pbiaha" sourceRef="Activity_0ascy4d" targetRef="Activity_0myn174" />
+  </bpmn:process>
+  <bpmn:process id="Process_1t1gby4" isExecutable="false">
+    <bpmn:startEvent id="Event_0h2ltli">
+      <bpmn:outgoing>Flow_1p7ea2x</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:userTask id="Activity_09n9dpr" name="Point A record for the domain to the EC2 instance&#39;s Elastic IP">
+      <bpmn:documentation>Set the TTL low enough. 300s is usually acceptably low.</bpmn:documentation>
+      <bpmn:incoming>Flow_1p7ea2x</bpmn:incoming>
+      <bpmn:outgoing>Flow_0yxob7g</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:manualTask id="Activity_0792pka" name="Add CName records for all subdomains you want to use">
+      <bpmn:incoming>Flow_0yxob7g</bpmn:incoming>
+      <bpmn:outgoing>Flow_13z0q49</bpmn:outgoing>
+    </bpmn:manualTask>
+    <bpmn:endEvent id="Event_1xzy69y">
+      <bpmn:incoming>Flow_13z0q49</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1p7ea2x" sourceRef="Event_0h2ltli" targetRef="Activity_09n9dpr" />
+    <bpmn:sequenceFlow id="Flow_0yxob7g" sourceRef="Activity_09n9dpr" targetRef="Activity_0792pka" />
+    <bpmn:sequenceFlow id="Flow_13z0q49" sourceRef="Activity_0792pka" targetRef="Event_1xzy69y" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_12bkb8p">
+      <bpmndi:BPMNShape id="Participant_06ne6up_di" bpmnElement="Participant_06ne6up" isHorizontal="true">
+        <dc:Bounds x="155" y="430" width="1665" height="260" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_09icefy_di" bpmnElement="Flow_09icefy">
+        <di:waypoint x="238" y="560" />
+        <di:waypoint x="290" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0gl93qy_di" bpmnElement="Flow_0gl93qy">
+        <di:waypoint x="390" y="560" />
+        <di:waypoint x="450" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_168i17i_di" bpmnElement="Flow_168i17i">
+        <di:waypoint x="550" y="560" />
+        <di:waypoint x="610" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0e4y691_di" bpmnElement="Flow_0e4y691">
+        <di:waypoint x="710" y="560" />
+        <di:waypoint x="775" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1xwsun5_di" bpmnElement="Flow_1xwsun5">
+        <di:waypoint x="825" y="560" />
+        <di:waypoint x="890" y="560" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="851" y="542" width="13" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0g992m5_di" bpmnElement="Flow_0g992m5">
+        <di:waypoint x="990" y="560" />
+        <di:waypoint x="1060" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1laji6n_di" bpmnElement="Flow_1laji6n">
+        <di:waypoint x="1160" y="560" />
+        <di:waypoint x="1235" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19q07wq_di" bpmnElement="Flow_19q07wq">
+        <di:waypoint x="800" y="585" />
+        <di:waypoint x="800" y="640" />
+        <di:waypoint x="1260" y="640" />
+        <di:waypoint x="1260" y="585" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1026" y="622" width="9" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ncezvf_di" bpmnElement="Flow_0ncezvf">
+        <di:waypoint x="1285" y="560" />
+        <di:waypoint x="1360" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i6e50b_di" bpmnElement="Flow_1i6e50b">
+        <di:waypoint x="1460" y="560" />
+        <di:waypoint x="1540" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1hnjfiv_di" bpmnElement="Flow_1hnjfiv">
+        <di:waypoint x="1640" y="560" />
+        <di:waypoint x="1712" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_1ynrctm_di" bpmnElement="Event_1ynrctm">
+        <dc:Bounds x="202" y="542" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1w0oujm_di" bpmnElement="Activity_1lgfpwe">
+        <dc:Bounds x="290" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1lmwa6h_di" bpmnElement="Activity_05gksxy">
+        <dc:Bounds x="450" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1n2w0fv_di" bpmnElement="Activity_0r05889">
+        <dc:Bounds x="610" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1obi6zn_di" bpmnElement="Gateway_1obi6zn" isMarkerVisible="true">
+        <dc:Bounds x="775" y="535" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="763" y="487" width="79" height="66" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_03dsays_di" bpmnElement="Activity_0z4c1zc">
+        <dc:Bounds x="890" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1uu616a_di" bpmnElement="Activity_0p5knlc">
+        <dc:Bounds x="1060" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1tsccbs_di" bpmnElement="Gateway_1tsccbs" isMarkerVisible="true">
+        <dc:Bounds x="1235" y="535" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0twis21_di" bpmnElement="Activity_17dthi6">
+        <dc:Bounds x="1360" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0kka5cs_di" bpmnElement="Activity_0mfms5v">
+        <dc:Bounds x="1540" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1vb8h2c_di" bpmnElement="Event_1vb8h2c">
+        <dc:Bounds x="1712" y="542" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_0v8pd7n_di" bpmnElement="Participant_0v8pd7n" isHorizontal="true">
+        <dc:Bounds x="155" y="80" width="600" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1pdkzmo_di" bpmnElement="Flow_1pdkzmo">
+        <di:waypoint x="238" y="200" />
+        <di:waypoint x="290" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1pbiaha_di" bpmnElement="Flow_1pbiaha">
+        <di:waypoint x="390" y="200" />
+        <di:waypoint x="450" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0rnkvgt_di" bpmnElement="Event_0rnkvgt">
+        <dc:Bounds x="202" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0p4tty3_di" bpmnElement="Activity_0ascy4d">
+        <dc:Bounds x="290" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_19ibxcg_di" bpmnElement="Activity_0myn174">
+        <dc:Bounds x="450" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_1wy56o8_di" bpmnElement="Participant_1wy56o8" isHorizontal="true">
+        <dc:Bounds x="155" y="780" width="600" height="250" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1p7ea2x_di" bpmnElement="Flow_1p7ea2x">
+        <di:waypoint x="238" y="900" />
+        <di:waypoint x="290" y="900" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0yxob7g_di" bpmnElement="Flow_0yxob7g">
+        <di:waypoint x="390" y="900" />
+        <di:waypoint x="450" y="900" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13z0q49_di" bpmnElement="Flow_13z0q49">
+        <di:waypoint x="550" y="900" />
+        <di:waypoint x="612" y="900" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Event_0h2ltli_di" bpmnElement="Event_0h2ltli">
+        <dc:Bounds x="202" y="882" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0m72fkp_di" bpmnElement="Activity_09n9dpr">
+        <dc:Bounds x="290" y="860" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_00o3hee_di" bpmnElement="Activity_0792pka">
+        <dc:Bounds x="450" y="860" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1xzy69y_di" bpmnElement="Event_1xzy69y">
+        <dc:Bounds x="612" y="882" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

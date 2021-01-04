@@ -1,0 +1,160 @@
+---
+
+- name: "Checking if we run on a Jenkins server or not. Delegating this task to localhost"
+  delegate_to: 127.0.0.1
+  shell: if [ -z $JENKINS_URL ]; then echo "non_jenkins_execution"; else echo $JENKINS_URL;  fi | {{ jenkins.url_sed }}
+  register: jenkins_context
+
+- name: "Block that gets only executed on all Jenkins servers"
+  block:
+
+    - name: "Creating atifact directories if they don't exist yet"
+      become: yes
+      delegate_to: 127.0.0.1
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0755'
+        owner: "{{ jenkins[jenkins_context.stdout].owner }}"
+        group: "{{ jenkins[jenkins_context.stdout].group }}"
+      with_items:
+        - "{{ jenkins[jenkins_context.stdout].artifact_directories.search_dir }}"
+
+    - name: "(Debian) Making sure that the package 'python-lxml' is available when run on a Jenkins server"
+      become: yes
+      delegate_to: 127.0.0.1
+      apt:
+        name: python-lxml
+        state: latest
+      when: ansible_facts['distribution'] == "Debian"
+
+    - name: "(CentOS) Making sure that the package 'python-lxml' is available when run on a Jenkins server"
+      become: yes
+      delegate_to: 127.0.0.1
+      vars:
+        ansible_python_interpreter: "{{ ansible_python2_interpreter }}"
+      yum:
+        name: python-lxml
+        state: latest
+      when: ansible_facts['distribution'] == "CentOS"
+
+    - name: "Retrieving latest 'lmwr-solr-indexer.jar' artifact from Nexus {{ jenkins[jenkins_context.stdout].repository_url }} with group_id "
+      become: yes
+      delegate_to: 127.0.0.1
+      maven_artifact:
+        group_id: "{{ jenkins[jenkins_context.stdout].group_id }}"
+        artifact_id: lmwr-solr-indexer
+        repository_url: "{{ jenkins[jenkins_context.stdout].repository_url }}"
+        username: "{{ nexus_user }}"
+        password: "{{ nexus_password }}"
+        dest: "{{ jenkins[jenkins_context.stdout].artifact_directories.search_dir }}"
+        validate_certs: no
+        verify_checksum: always
+        mode: '0644'
+
+    - name: "Copying the latest 'lmwr-solr-indexer.jar' artifact from Jenkins to remote /tmp folder"
+      become: yes
+      copy:
+        src: "{{ jenkins[jenkins_context.stdout].artifact_directories.search_dir }}/{{ solr_indexer.jar_nexus_file_name }}"
+        dest: "/tmp/{{ solr_indexer.jar_file_name }}"
+        owner: "{{ hostvars[inventory_hostname].app_user }}"
+
+  when: jenkins_context.stdout != "non_jenkins_execution"
+# / "Block that gets only executed on all Jenkins servers"
+
+- name: "Block for non-Jenkins servers"
+  block:
+
+  - name: "Checking if local '{{ solr_indexer.jar_file_directory }}' exists="
+    delegate_to: 127.0.0.1
+    stat:
+      path: "{{ solr_indexer.jar_file_directory }}"
+    register: target_directory
+
+  - name: "Checking if there are any files in the target directory, that need to be copied"
+    delegate_to: 127.0.0.1
+    find:
+      paths:
+        - "{{ solr_indexer.jar_file_directory }}"
+      patterns:
+        - "{{ solr_indexer.jar_file_pattern }}"
+    register: jar_files_found
+    when: target_directory.stat.exists and target_directory.stat.isdir
+
+  - name: "If not run on Jenkins server and no local jar file exists, we have to fail here"
+    fail:
+      msg: "Couldn't find local jar files in '{{ solr_indexer.jar_file_directory }}' matching '{{ solr_indexer.jar_file_pattern }}' -> Aborting!"
+    when: jar_files_found.matched == 0
+
+  - name: "Copying 'lmwr-solr-indexer' artifact from local target folder to remote /tmp folder"
+    become: yes
+    copy:
+      src: "{{ item }}"
+      dest: "/tmp/{{ solr_indexer.jar_file_name }}"
+      owner: "{{ hostvars[inventory_hostname].app_user }}"
+    with_fileglob:
+      - "{{ solr_indexer.jar_file_directory }}/{{ solr_indexer.jar_file_pattern }}"
+
+  when: jenkins_context.stdout == "non_jenkins_execution"
+# / "Block for non-Jenkins servers"
+
+- name: "Adding webapp user {{ hostvars[inventory_hostname].app_user }}"
+  become: yes
+  user:
+    name: "{{ hostvars[inventory_hostname].app_user }}"
+
+- name: "Stopping the lmwr-solr-indexer service. If not yet present, we ignore errors"
+  become: yes
+  systemd:
+    name: lmwr-solr-indexer
+    state: stopped
+  ignore_errors: yes
+
+- name: "Installing lmwr-solr-indexer service as systemd service"
+  become: yes
+  template:
+    src: lmwr-solr-indexer.service.j2
+    dest: /etc/systemd/system/lmwr-solr-indexer.service
+
+- name: "Creating base directory {{ solr_indexer[jenkins_context.stdout].base_directory }} for solr-indexer webapp"
+  become: yes
+  file:
+    path: "{{ solr_indexer[jenkins_context.stdout].base_directory }}"
+    state: directory
+    owner: "{{ hostvars[inventory_hostname].app_user }}"
+
+- name: "Creating webapp content directory"
+  become: yes
+  file:
+    path: "{{ webapp.content_path }}"
+    state: directory
+    owner: "{{ hostvars[inventory_hostname].app_user }}"
+
+- name: "Creating webapp datasources directory"
+  become: yes
+  file:
+    path: "{{ webapp.datasources_path }}"
+    state: directory
+    owner: "{{ hostvars[inventory_hostname].app_user }}"
+
+- name: "Copying the 'solr-indexer' artifacts from remote /tmp folder to {{ solr_indexer[jenkins_context.stdout].base_directory }}"
+  become: yes
+  copy:
+    remote_src: yes
+    src: "/tmp/{{ solr_indexer.jar_file_name }}"
+    dest: "{{ solr_indexer[jenkins_context.stdout].base_directory }}/{{ solr_indexer.jar_file_name }}"
+    owner: "{{ hostvars[inventory_hostname].app_user }}"
+
+- name: "Starting lmwr-solr-indexer service"
+  become: yes
+  systemd:
+    name: lmwr-solr-indexer
+    daemon_reload: yes
+    enabled: yes
+    state: started
+
+- name: "Waiting {{ solr_indexer[jenkins_context.stdout].wait_for_port_timeout }} seconds     for webapp port to open"
+  become: yes
+  wait_for:
+    port: "{{ solr_indexer[jenkins_context.stdout].port }}"
+    timeout: "{{ solr_indexer[jenkins_context.stdout].wait_for_port_timeout }}"

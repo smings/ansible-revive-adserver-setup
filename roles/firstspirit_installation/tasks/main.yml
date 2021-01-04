@@ -1,0 +1,82 @@
+---
+- name: "Downloading FirstSpirit"
+  become: yes
+    get_url:
+    url_username: adesso
+    url_password: <place_password_here>
+    url: http://www.e-spirit.de/download/updateFS52/{{ fs_version }}/install/firstspirit-isolated-{{ fs_release }}.tgz
+    dest: /tmp/
+
+- name: "Creating FirstSpirit destination directory"
+  become: yes
+    file:
+    path: /opt/firstspirit5_lmwr
+    state: directory
+    owner: "{{ hostvars[inventory_hostname].app_user }}"
+    group: "{{ hostvars[inventory_hostname].app_user }}"
+
+- name: "Unpacking FirstSpirit"
+  become: yes
+    unarchive:
+    src: /tmp/firstspirit-isolated-{{ fs_release }}.tgz
+    dest: /opt/firstspirit5_lmwr
+    creates: /opt/firstspirit5_lmwr/bin
+    remote_src: yes
+    extra_opts:
+      - --strip-components=1
+    owner: "{{ hostvars[inventory_hostname].app_user }}"
+    group: "{{ hostvars[inventory_hostname].app_user }}"
+
+- name: "Uploading fs-server.conf"
+  become: yes
+    copy:
+    src: fs-server.conf
+    dest: /opt/firstspirit5_lmwr/conf/fs-server.conf
+    force: yes
+    owner: "{{ hostvars[inventory_hostname].app_user }}"
+    group: "{{ hostvars[inventory_hostname].app_user }}"
+
+- name: "Starting FS the first time"
+  become: yes
+  become_user: "{{ hostvars[inventory_hostname].app_user }}"
+  shell: FSDEMO=false FS_JAVA_HOME={{ hostvars[inventory_hostname].java_home }} JAVA_HOME={{ hostvars[inventory_hostname].java_home }} /opt/firstspirit5_lmwr/bin/fs5 start
+
+- name: "Waiting until basic webapp is deployed"
+  become: yes
+    wait_for:
+    path: /opt/firstspirit5_lmwr/log/fs-server.log
+    search_regex: "Reached run level: STARTED\\(100\\)"
+    delay: 30
+
+- name: "Stopping FS for further configuration"
+  become: yes
+  become_user: "{{ hostvars[inventory_hostname].app_user }}"
+  shell: /opt/firstspirit5_lmwr/bin/fs5 stop
+
+- name: "Uploading systemd service file"
+  become: yes
+  copy:
+    src: fs_lmwr.service
+    dest: /opt/firstspirit5_lmwr/conf/fs_lmwr.service
+    force: yes
+
+- name: "Enabling FS service"
+  become: yes
+  command: systemctl enable /opt/firstspirit5_lmwr/conf/fs_lmwr.service
+
+- name: "Creating script directory"
+  become: yes
+  file:
+    path: "{{ hostvars[inventory_hostname].firstspirit_base_directory }}/script"
+    state: directory
+    owner: "{{ hostvars[inventory_hostname].firstspirit_user }}"
+    group: "{{ hostvars[inventory_hostname].firstspirit_user }}"
+
+- name: "Copying scripts"
+  become: yes
+  become_user: "{{ hostvars[inventory_hostname].firstspirit_user }}"
+  synchronize:
+    delete: yes
+    src: scripts/
+    dest: "{{ hostvars[inventory_hostname].firstspirit_base_directory }}/script/"
+    

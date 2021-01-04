@@ -1,0 +1,5 @@
+---
+
+- name: "update solr config"
+  uri:
+    url: http://localhost:8080/updateSolrConfiguration

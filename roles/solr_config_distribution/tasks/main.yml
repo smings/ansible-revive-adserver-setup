@@ -1,0 +1,15 @@
+---
+
+- name: "Copying solr config files to server"
+  become: yes
+  copy:
+    src: .
+    dest: "{{ solr_indexer.config_dir }}"
+    force: yes
+    owner: "{{ app_user }}"
+    mode: 0644
+
+- name: "Updating solr config"
+  command: date
+  notify: "update solr config"
+ 

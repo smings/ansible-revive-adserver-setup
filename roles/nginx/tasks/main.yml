@@ -1,0 +1,111 @@
+---
+
+- name: "Checking if /etc/letsencrypt/live directory already exists."
+  stat:
+    path: "/etc/letsencrypt/live"
+  register: le_dir
+
+- name: "Block for Debian servers"
+  block:
+
+    - name: "Installing nginx-relevant packages for Debian"
+      become: yes
+      apt:
+        name: "{{ packages.present.Debian.nginx }}"
+
+    - name: "Making sure that we have a document root directory for media assets."
+      become: yes
+      file:
+        path: "{{ nginx.document_root }}"
+        state: directory
+        owner: "{{ nginx.Debian.owner }}"
+        group: "{{ nginx.Debian.group }}"
+
+    - name: "Adding gateway server config"
+      become: yes
+      template:
+        src: nginx-gateway-initial-installation.conf.j2
+        dest: /etc/nginx/site-available/gateway.conf
+      when: not le_dir.stat.exists
+
+  when: ansible_facts['distribution'] == "Debian"
+
+- name: "Block for CentOS servers running yum"
+  block: 
+
+    - name: "Installing nginx pre-install relevant packages (EPEL) for CentOS"
+      become: yes
+      vars:
+        ansible_python_interpreter: "{{ ansible_python2_interpreter }}"
+      yum:
+        name: "{{ packages.present.CentOS.nginx_pre }}"
+
+    - name: "Installing nginx-relevant packages (nginx) for CentOS"
+      become: yes
+      vars:
+        ansible_python_interpreter: "{{ ansible_python2_interpreter }}"
+      yum:
+        name: "{{ packages.present.CentOS.nginx }}"
+        update_cache: yes
+
+    - name: "Making sure that we have a document root directory for media assets."
+      become: yes
+      file:
+        path: "{{ nginx.document_root }}"
+        state: directory
+        owner: "{{ nginx.CentOS.owner }}"
+        group: "{{ nginx.CentOS.group }}"
+
+    - name: "Adding gateway server config"
+      become: yes
+      template:
+        src: nginx-gateway-initial-installation.conf.j2
+        dest: /etc/nginx/conf.d/gateway.conf
+      when: not le_dir.stat.exists
+
+    - name: "Creating basic authentication user"
+      become: yes
+      vars:
+        ansible_python_interpreter: "{{ ansible_python2_interpreter }}"
+      htpasswd:
+        path: "{{ nginx.basic_auth_file }}"
+        name: "{{ vault.nginx.basic_auth.login }}"
+        password: "{{ vault.nginx.basic_auth.password }}"
+        owner: "{{ nginx.CentOS.owner }}"
+        group: "{{ nginx.CentOS.group }}"
+        mode: 0640
+        state: present
+
+  when: ansible_facts['distribution'] == "CentOS"
+
+- name: "Obtaining letsencrypt certificates only if we haven't done so before"
+  become: yes  
+  shell: certbot --nginx -d {{ nginx_server_names | join(" -d ") }} -m {{ certbot_contact_email }} --non-interactive --agree-tos
+  when: not le_dir.stat.exists
+
+- name: "Making sure we have renewal crontab entry"
+  become: yes
+  cron:
+    name: "Letsencrypt renewal"
+    hour: "2"
+    minute: "2"
+    job: certbot renew --post-hook "systemctl reload nginx"
+
+- name: "Updating gateway server config"
+  become: yes
+  template:
+    src: nginx-gateway-update.conf.j2
+    dest: /etc/nginx/conf.d/gateway.conf
+  when: ansible_facts['distribution'] == "CentOS"
+
+- name: "Updating gateway server config"
+  become: yes
+  template:
+    src: nginx-gateway-update.conf.j2
+    dest: /etc/nginx/site-available/gateway.conf
+  when: ansible_facts['distribution'] == "Debian"
+
+- name: "Checking nginx config before restarting it. Better fail than restarting with an erroneous config"
+  become: yes
+  command: "nginx -t"
+  notify: "restart nginx"

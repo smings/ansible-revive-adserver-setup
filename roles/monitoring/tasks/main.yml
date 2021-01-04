@@ -1,0 +1,19 @@
+---
+- name: "Copying docker setup files"
+  become: yes
+  copy:
+    src: .
+    dest: /opt/elk/
+
+- name: "Tearing down any existing docker services"
+  become: yes
+  docker_compose:
+    project_src: /opt/elk/
+    state: absent
+
+- name: "Creating and starting all docker services"
+  become: yes
+  docker_compose:
+    project_src: /opt/elk/
+    build: true
+

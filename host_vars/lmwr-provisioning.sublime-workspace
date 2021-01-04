@@ -1,0 +1,732 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"solr",
+				"solr_indexer"
+			],
+			[
+				"content",
+				"content_path"
+			],
+			[
+				"dire",
+				"directory"
+			],
+			[
+				"st",
+				"stdout_lines"
+			],
+			[
+				"J",
+				"JENKINS_URL"
+			],
+			[
+				"bac",
+				"backup_file"
+			],
+			[
+				"ta",
+				"target_env"
+			],
+			[
+				"target",
+				"target_domain"
+			],
+			[
+				"syn",
+				"sync_domain"
+			],
+			[
+				"local",
+				"local_action"
+			],
+			[
+				"wp_",
+				"wp_environments"
+			],
+			[
+				"direc",
+				"directories"
+			],
+			[
+				"wi",
+				"with_items"
+			],
+			[
+				"php",
+				"php-fpm"
+			],
+			[
+				"n",
+				"nginx"
+			],
+			[
+				"grep",
+				"grepStr"
+			],
+			[
+				"gr",
+				"grepStr"
+			],
+			[
+				"out",
+				"output_file"
+			],
+			[
+				"D",
+				"Description"
+			],
+			[
+				"loca",
+				"local_csv_file"
+			],
+			[
+				"csv",
+				"csv_file"
+			],
+			[
+				"scp",
+				"scp_target"
+			],
+			[
+				"ma",
+				"maxsize"
+			],
+			[
+				"kee",
+				"keep_files"
+			],
+			[
+				"idna",
+				"idna_version"
+			],
+			[
+				"www",
+				"wwwdir"
+			],
+			[
+				"keep",
+				"keepdump"
+			],
+			[
+				"coo",
+				"cookiesByDomain"
+			],
+			[
+				"cookiesB",
+				"cookiesByName"
+			],
+			[
+				"per",
+				"perlFromJson"
+			],
+			[
+				"cooki",
+				"cookiesJson"
+			],
+			[
+				"de",
+				"deactivated"
+			],
+			[
+				"profile",
+				"profile_picture"
+			],
+			[
+				"hid",
+				"hiddenPersonalData_id"
+			],
+			[
+				"app",
+				"appointment_slot"
+			],
+			[
+				"custo",
+				"customer_id"
+			],
+			[
+				"cus",
+				"customer_id"
+			],
+			[
+				"user",
+				"user_id"
+			],
+			[
+				"kis",
+				"kissmetrics_event"
+			],
+			[
+				"no_",
+				"no_deleting"
+			],
+			[
+				"dot",
+				"dotfile_stencil_directory"
+			],
+			[
+				"hostname",
+				"hostname"
+			],
+			[
+				"ean",
+				"ean_locations"
+			],
+			[
+				"lo",
+				"loc"
+			],
+			[
+				"wrie",
+				"write_csv_files"
+			],
+			[
+				"winnin",
+				"winning_results"
+			],
+			[
+				"num",
+				"number_of_used_page_templates"
+			],
+			[
+				"targe",
+				"target_csv_filename_transposed"
+			],
+			[
+				"data",
+				"data_set_width"
+			],
+			[
+				"sorted_",
+				"sorted_usage_section_templates"
+			],
+			[
+				"cou",
+				"count_fixed_length"
+			],
+			[
+				"fa",
+				"fair_names"
+			],
+			[
+				"fair",
+				"fair_name"
+			],
+			[
+				"no",
+				"noHitsLogger"
+			],
+			[
+				"erro",
+				"errorLogger"
+			],
+			[
+				"catal",
+				"catalogCollection"
+			],
+			[
+				"logg",
+				"noHitsLogger"
+			],
+			[
+				"NO",
+				"NO_HITS"
+			],
+			[
+				"count",
+				"countProducts"
+			],
+			[
+				"winn",
+				"winningSKUs"
+			],
+			[
+				"in",
+				"invalidValues"
+			],
+			[
+				"valid",
+				"validCategories"
+			],
+			[
+				"brok",
+				"brokenColors"
+			],
+			[
+				"vlid",
+				"validColors"
+			],
+			[
+				"vali",
+				"validCategories"
+			],
+			[
+				"colo",
+				"colorSlug"
+			],
+			[
+				"che",
+				"checkColorAndCategory"
+			],
+			[
+				"win",
+				"winningSKUs"
+			],
+			[
+				"compa",
+				"compareProductPrices"
+			],
+			[
+				"file",
+				"fileName"
+			],
+			[
+				"db",
+				"db_data"
+			],
+			[
+				"bo",
+				"box_outfit_id"
+			],
+			[
+				"box",
+				"box_product"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "{\n\t\"folders\":\n\t[\n\t\t{\n\t\t\t\"path\": \"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-provisioning\"\n\t\t}\n\t]\n}\n",
+			"file": "lmwr-provisioning.sublime-project",
+			"file_size": 103,
+			"file_write_time": 132325255950111045,
+			"settings":
+			{
+				"buffer_size": 103,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/Python/Python.sublime-build",
+					""
+				],
+				[
+					"Packages/Python/Python.sublime-build",
+					"Syntax Check"
+				]
+			],
+			[
+				"Packages/Python/Python.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"remov",
+				"Package Control: Remove Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			],
+			[
+				"inst",
+				"Package Control: Install Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"instal",
+				"Package Control: Install Package"
+			],
+			[
+				"brow",
+				"Preferences: Browse Packages"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"list",
+				"Package Control: List Packages"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"list ",
+				"Package Control: List Packages"
+			],
+			[
+				"",
+				"Package Control: Add Repository"
+			],
+			[
+				"upg",
+				"Package Control: Upgrade/Overwrite All Packages"
+			],
+			[
+				"Remov",
+				"Package Control: Remove Package"
+			],
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"reindent",
+				"Indentation: Reindent Lines"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 178.0,
+		"history":
+		[
+			"pwd",
+			"import urllib.request,os,hashlib; h = '6f4c264a24d933ce70df5dedcf1dcaee' + 'ebe013ee18cced0ef93d5f746d80ef60'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-provisioning",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-provisioning/group_vars",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-provisioning/group_vars/all",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-provisioning/host_vars",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-provisioning/roles",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-provisioning/roles/nginx",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-provisioning/roles/nginx/tasks"
+	],
+	"file_history":
+	[
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-provisioning/.gitignore",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-provisioning/host_vars/lmwr-edge01.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-provisioning/nginx.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-provisioning/roles/nginx/templates/nginx-gateway.conf.j2",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/host_vars/lmwl-fs-dev03.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/group_vars/all/config.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/webapp/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/gateway/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/gateway/templates/gateway.service.j2",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/solr_indexer/templates/lmwr-solr-indexer.service.j2",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/webapp/templates/webapp.service.j2",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/solr.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/solr_indexer/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/rsyncd_content/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/rsyncd_media/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/host_vars/lmwr-search01.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/gateway/handlers/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/host_vars/debian_vm.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/host_vars/centos_vm.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/solr_config_distribution/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/group_vars/all.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/nginx/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/docker/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/common/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/consul/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/firstspirit_installation.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/firstspirit_distribute_scripts.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/site.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/firstspirit_distribute_scripts/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/gateway.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/solr_indexer.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/webapp.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/rsyncd_media/templates/rsyncd_media.conf.j2",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/ansible.cfg",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/consul.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/consul/files/consul.service",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/java/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/nginx/templates/nginx-gateway.conf.j2",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/consul/templates/consul_config.json.j2",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/webapp/src/main/resources/logback-spring.xml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/Vagrantfile",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/.gitignore",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/solr_config_distribution/handlers/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/solr_config_distribution/handler/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/debug.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/solr/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/solr_config_distribution/tasks/upload_configs.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/playbooks/search/search.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/solr_config_distribution/tasks/update_solr.yml",
+		"/Users/tornow/xfer/phd/list.txt",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/README.md",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/README.md",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/playbooks/edge/edge.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/playbooks/monitoring/elk/elk.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/monitoring/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/inventories/vagrant_centos",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/rsyncd_content/templates/rsyncd_content.conf.j2",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/java.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/search/target/sthg.jar",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/search/target/solr-indexer-01.jar",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/firstspirit/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/firstspirit.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/playbooks/firstSpirit/deployment_scripts.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/monitoring.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/playbooks/monitoring/elk/.env",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/rsyncd_gateway/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/rsyncd_webapp/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/rsynd_gateway.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/inventories/vagrant_debian",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/inventories/test",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/inventories/prod",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/rsynd_webapp.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/inventories/vagrant_all",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/inventories/dev",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/playbooks/search/lmwr-solr-indexer.service.j2",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/playbooks/firstSpirit/scripts/solr_connector.py",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/playbooks/firstSpirit/scripts/env.py",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/playbooks/firstSpirit/scripts/deploy_cms.py",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/rsyncd_webapp/templates/rsyncd_webapp.conf.j2",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/gateway/pom.xml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/nginx.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/playbooks/appserver/consul.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/docker.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/webapp/target/webapp.jar",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/webapp/target/webapp01.jar",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/consul/files",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/playbooks/appserver/consul.service",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/solr/files/solr/conf/conf/log4j2.xml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/common.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/solr_config_distribution.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/dev",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/roles/gateway-test/tasks/main.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/gateway/target/gateway-01.jar",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/gateway/target/gateway.jar",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/host_vars/lmwl-fs-dev03.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/Jenkinsfile_test",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/host_vars/centos_vm.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/host_vars/debian_vm.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/playbooks/edge/nginx.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/environment/playbooks/common/ssh_keys.yml",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/provisioning/.ansible_vault_password",
+		"/Users/tornow/dev/adesso/adesso-bitbucket/lmwr-webapps/Jenkinsfile",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/group_vars/wordpress/config.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/ansible_commands.txt",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/roles/nginx/templates/vhost.conf.j2",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/roles/wordpress/tasks/install.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/wordpress-backup.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/roles/wordpress/tasks/backup.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/wp_theme/flatsome-main/License/58072914-flatsome-multipurpose-responsive-woocommerce-theme-license.txt",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/roles/wordpress/tasks/main.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/roles/wordpress/tasks/restore.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/roles/wordpress/tasks/copy_config.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/wp_theme/flatsome-main/License/flatsome.txt",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/wordpress-restore.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/wordpress-copy-config.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/group_vars/wordpress/vault.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/group_vars/all/config.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/roles/wordpress/tasks/sync2remote.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/roles/wordpress/templates/awscli_credentials.j2",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/wordpress-installation.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/roles/wordpress/templates/wp-config.php.j2",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/host_vars/52.28.84.164.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/wordpress.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/roles/wordpress/templates/awscli_conf.j2",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/wordpress-sync2remote.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/roles/wordpress-devops/tasks/main.yml",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/wp_hosts/52.28.84.164/smings.de/dev/test",
+		"/Users/tornow/dev/smings/shopify-setup-process/wordpress-setup-process-in-aws/ansible/wordpress-sync2local.yml"
+	],
+	"find":
+	{
+		"height": 30.0
+	},
+	"find_in_files":
+	{
+		"height": 163.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "lmwr-provisioning.sublime-project",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 103,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JSON.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 30.0
+	},
+	"input":
+	{
+		"height": 57.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 208.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.git":
+	{
+		"height": 144.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 156.0
+	},
+	"pinned_build_system": "Packages/ShellScript/ShellScript.sublime-build",
+	"project": "lmwr-provisioning.sublime-project",
+	"replace":
+	{
+		"height": 56.0
+	},
+	"save_all_on_build": false,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 313.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
