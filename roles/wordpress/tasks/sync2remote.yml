@@ -1,0 +1,20 @@
+---
+- name: "Sync wordpress from local directory {{ wp_instance_base_directory }}/{{ inventory_hostname }}/{{ target_domain }}/{{ target_env }} to the remote server at {{ ansible_user }}@{{ inventory_hostname }}:{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}"
+  local_action: command rsync -avzh --delete --rsync-path "sudo rsync" {{ wp_instance_base_directory }}/{{ inventory_hostname }}/{{ target_domain }}/{{ target_env }}/ {{ ansible_user }}@{{ inventory_hostname }}:{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}/ {{ rsync_exclude_files }} -e "ssh -o StrictHostKeyChecking=no -i {{ ansible_ssh_private_key_file }}"
+
+- name: "Copying wp-config.php.j2 "
+  template:
+    src: "wp-config.php.j2"
+    dest: "{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}/wp-config.php"
+  become: yes
+
+- name: "Setting wordpress document root owner:group to {{ nginx.owner }}:{{ nginx.group }}"
+  file:
+    path: "{{ nginx.base_directory }}"
+    state: directory
+    owner: "{{ nginx.owner }}"
+    group: "{{ nginx.group }}"
+    recurse: yes
+  become: yes
+
+

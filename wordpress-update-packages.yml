@@ -1,0 +1,7 @@
+---
+- hosts: wordpress
+  gather_facts: no
+  vars:
+    wp_action: update_packages
+  roles:
+    - wordpress

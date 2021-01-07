@@ -1,0 +1,9 @@
+---
+
+- name: "Checking if we have to install the revive adserver"
+  include_tasks: install.yml
+  when: rv_action == 'install'
+
+# - name: "Checking if we have to update the revive adserver"
+#   include_tasks: update.yml
+#   when: rv_action == 'update'

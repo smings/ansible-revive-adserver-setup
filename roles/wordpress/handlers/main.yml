@@ -1,0 +1,11 @@
+---
+- name: block with sudo escalation
+  become_user: root
+  become: true
+  block:
+
+    - name: restart php-fpm
+      service:
+        name: "php{{ php.version }}-fpm"
+        state: restarted
+        enabled: yes

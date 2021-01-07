@@ -1,0 +1,186 @@
+---
+
+- name: "Checking if AWS CLI is already installed or not"
+  stat:
+    path: /home/{{ ansible_user }}/.aws2
+  register: aws_config
+
+- name: "Block gets executed if AWS CLI is not yet installed"
+  block:
+
+    - name: "Installing awscli"
+      pip: 
+        name: awscli 
+        state: latest
+      become: yes
+
+    - name: "Creating .aws directory /home/{{ ansible_user }}/.aws"
+      file:
+        path: "/home/{{ ansible_user }}/.aws"
+        state: directory
+        mode: 0755
+    
+    - name: "Copying awscli config"
+      template:
+        src: awscli_conf.j2
+        dest: "/home/{{ ansible_user }}/.aws/config"
+        mode: 0644
+
+    - name: "Copying awscli credentials"
+      template:
+        src: awscli_credentials.j2
+        dest: "/home/{{ ansible_user }}/.aws/credentials"
+        mode: 0600
+
+  when: aws_config.stat.exists == false
+
+
+
+
+- name: "Checking if WordPress CLI is already installed or not"
+  stat:
+    path: /usr/local/bin/wp
+  register: wp_cli
+
+- name: "Block gets executed, if wp cli isn't installed yet"
+  block:
+
+    - name: "Downloading WP-CLI"
+      get_url: 
+        url: "https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar"
+        dest: "/tmp/wp-cli.phar"
+    
+    - name: "Adding WP-CLI to /usr/local/bin/"
+      command: mv /tmp/wp-cli.phar /usr/local/bin/wp creates=/usr/local/bin/wp
+      become: yes
+    
+    - name: "Making WP-CLI executable"
+      file: 
+        path: "/usr/local/bin/wp"
+        state: file
+        owner: "{{ nginx.owner }}"
+        group: "{{ nginx.group }}"
+        mode: 0755
+      become: yes
+
+    - name: "Removing download file"
+      file:
+        path: "/tmp/wp-cli.phar"
+        state: absent
+
+  when: wp_cli.stat.exists == false
+
+
+- name: "Checking if worpress is already installed {{ nginx.base_directory }}/{{ wp_domains.0 }}/{{ nginx.prod_directory_name }}/{{ wordpress.admin_directory_name }}"
+  stat: 
+    path: "{{ nginx.base_directory }}/{{ wp_domains.0 }}/{{ nginx.prod_directory_name }}/{{ wordpress.admin_directory_name }}"
+  register: wp_installation
+
+- debug:
+    msg: "Wordpress is already installed - skipping the installation."
+  when: wp_installation.stat.exists == true
+
+- name: only execute the following block if WordPress isn't installed yet
+  block:
+
+    - name: "Making sure we have the necessary repository for current php versions"
+      apt_repository:
+       repo: ppa:ondrej/php
+       state: present
+      become: yes
+
+    - name: installing wordpress dependencies packages
+      apt:
+        name: "{{ wordpress.packages }}"
+        state: latest
+      become: yes
+
+    - name: "downloading WordPress version {{ wp_install_version }} into {{ nginx.base_directory }}"
+      get_url:
+        url: "{{ wordpress.download_base_url }}/{{ wordpress.download_filename }}"
+        dest: "{{ nginx.base_directory }}"
+      become: yes
+
+    - name: "Unpacking WordPress download file {{ wordpress.download_filename }} into {{ nginx.base_directory }}/{{ nginx.prod_directory_name }} for all server names"
+      unarchive:
+        src: "{{ nginx.base_directory }}/{{ wordpress.download_filename }}"
+        dest: "{{ nginx.base_directory }}/{{ item }}/{{ nginx.prod_directory_name }}"
+        remote_src: yes
+      with_items: "{{ wp_domains }}"
+      become: yes
+
+    - name: "Unpacking WordPress download file {{ wordpress.download_filename }} into {{ nginx.base_directory }}/{{ nginx.dev_directory_name }} for all server names"
+      unarchive:
+        src: "{{ nginx.base_directory }}/{{ wordpress.download_filename }}"
+        dest: "{{ nginx.base_directory }}/{{ item }}/{{ nginx.dev_directory_name }}"
+        remote_src: yes
+      with_items: "{{ wp_domains }}"
+      become: yes
+
+    - name: "Moving all data from wordpress directories one level down for PROD."
+      shell: "mv {{ nginx.base_directory }}/{{ item }}/{{ nginx.prod_directory_name }}/{{ wp_base_directory_name }}/* {{ nginx.base_directory }}/{{ item }}/{{ nginx.prod_directory_name }}/"
+      with_items: "{{ wp_domains }}"
+      become: yes
+
+    - name: "Moving all data from wordpress directories one level down for DEV."
+      shell: "mv {{ nginx.base_directory }}/{{ item }}/{{ nginx.dev_directory_name }}/{{ wp_base_directory_name }}/* {{ nginx.base_directory }}/{{ item }}/{{ nginx.dev_directory_name }}/"
+      with_items: "{{ wp_domains }}"
+      become: yes
+
+    - name: "Removing empty wordpress directories from PROD directories"
+      file:
+        path: "{{ nginx.base_directory }}/{{ item }}/{{ nginx.prod_directory_name }}/{{ wp_base_directory_name }}"
+        state: absent
+      with_items: "{{ wp_domains }}"
+      become: yes
+
+    - name: "Removing empty wordpress directories from DEV directories"
+      file:
+        path: "{{ nginx.base_directory }}/{{ item }}/{{ nginx.dev_directory_name }}/{{ wp_base_directory_name }}"
+        state: absent
+      with_items: "{{ wp_domains }}"
+      become: yes
+
+    - name: "Setting wordpress document root owner:group to {{ nginx.owner }}:{{ nginx.group }}"
+      file:
+        path: "{{ nginx.base_directory }}"
+        state: directory
+        owner: "{{ nginx.owner }}"
+        group: "{{ nginx.group }}"
+        recurse: yes
+      notify: 
+        - restart nginx
+        - restart php-fpm
+      become: yes
+
+    - name: "Removing downloaded wordpress file {{ nginx.base_directory }}/{{ wordpress.download_filename }}"
+      file:
+        path: "{{ nginx.base_directory }}/{{ wordpress.download_filename }}"
+        state: absent
+      become: yes
+
+    - name: "Making sure that the config file {{ fpm.php_ini }} contains 'cgi.fix_pathinfo = 0'"
+      lineinfile:
+        path: "{{ fpm.php_ini }}"
+        regex: "^;?\\s*cgi.fix_pathinfo\\s*=\\s*\\d+\\s*$"
+        line: cgi.fix_pathinfo = 0
+      become: yes
+
+    - name: "Making sure that the config file {{ fpm.php_ini }} contains 'upload_max_filesize = 64M'"
+      lineinfile:
+        path: "{{ fpm.php_ini }}"
+        regex: "^;?\\s*upload_max_filesize\\s*=.*$"
+        line: "upload_max_filesize = 64M"
+      become: yes
+      notify: 
+        - restart nginx
+        - restart php-fpm
+
+    - name: "Making sure that the config file {{ fpm.php_ini }} contains 'post_max_size = 64M'"
+      lineinfile:
+        path: "{{ fpm.php_ini }}"
+        regex: "^;?\\s*post_max_size\\s*=.*$"
+        line: "post_max_size = 64M"
+      become: yes
+
+  when: wp_installation.stat.exists == false  

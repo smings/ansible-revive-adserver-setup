@@ -1,0 +1,24 @@
+---
+
+- name: "Downloading revive adserver in version {{ revive_version }}"
+  become: yes
+  unarchive: 
+    src: "{{ revive.download_url }}"
+    dest: "{{ nginx.base_directory }}"
+    remote_src: yes
+    owner: "{{ nginx.owner }}"
+    group: "{{ nginx.group }}"
+
+- name: "removing present html directory"
+  become: yes
+  file:
+    path: "{{ nginx.base_directory }}/{{ nginx.last_directory }}"
+    state: absent
+
+- name: "creating current symlink"
+  become: yes
+  file:
+    src: "{{ nginx.base_directory }}/{{ revive_file_prefix }}{{ revive_version }}"
+    dest: "{{ nginx.base_directory }}/{{ nginx.last_directory }}"
+    state: link
+

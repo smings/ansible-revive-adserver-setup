@@ -1,0 +1,23 @@
+---
+- name: "Syncing dev to prod for {{ target_domain }}"
+  set_fact:
+    target_env: "dev"
+    sync_environments_mode: "true"
+    backup_comment: "tmp_file_for_syncing_dev_to_prod"
+  
+- name: "Calling backup.yml for creating a backup from dev for syncing to prod"
+  include_tasks: backup.yml
+
+- name: "Setting target_env to prod for restoring dev files into prod"
+  set_fact:
+    backup_file: "{{ timestamp.stdout }}_{{ target_domain }}_{{ target_env }}_wp_combined_backup_{{ backup_comment }}.tgz"
+    target_env: "prod"
+
+- name: "Calling restore.yml for syncing from dev to prod"
+  include_tasks: restore.yml
+
+- name: "Copying wp-config.php.j2 to make sure everything works as desired"
+  include_tasks: copy_config.yml
+
+- name: "Setting the name of the wordpress website to {{ wp_blogname.prod[target_domain] }} for {{ target_domain }}/prod"
+  shell: wp --allow-root --path='{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}' option update blogname '{{ wp_blogname.prod[target_domain] }}'

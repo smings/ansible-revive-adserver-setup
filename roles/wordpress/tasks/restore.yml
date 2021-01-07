@@ -1,0 +1,85 @@
+---
+
+- name: "Checking if the backup file is already present in the /tmp folder. If not, we try to download it from aws S3"
+  stat:
+    path: "/tmp/{{ backup_file }}"
+  register: backup_file_present
+
+- name: "Copying backup file from S3 bucket {{ vault.aws.s3_backup_bucket }}/{{ target_domain }}/{{ target_env }}/{{ backup_file }}"
+  shell: aws s3 cp "s3://{{ vault.aws.s3_backup_bucket }}/{{ target_domain }}/{{ target_env }}/{{ backup_file }}" "/tmp/"
+  when: backup_file_present.stat.exists == false
+
+- name: "Unpacking combined backup file"
+  unarchive:
+    src: "/tmp/{{ backup_file }}"
+    dest: "/tmp"
+    remote_src: yes
+
+- name: "Unpacking database dump file into /tmp"
+  shell: "gzip -d /tmp/{{ backup_file | regex_replace(\"_combined_backup.*\", \"_db_dump.sql.gz\") }}"
+
+- name: "Creating parallel document root for extracting wordpress folder"
+  file:
+    path: "{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}_restored"
+    state: directory
+  become: yes
+
+- name: "Moving backup file /tmp/{{ backup_file | regex_replace(\"_combined_backup.*\", \"_files.tgz\") }} to parallel document root directory"
+  shell: mv '/tmp/{{ backup_file | regex_replace("_combined_backup.*", "_files.tgz") }}' '{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}_restored/'
+  become: yes
+
+- name: "Unpacking WordPress backup archive file."
+  unarchive:
+    src: "{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}_restored/{{ backup_file | regex_replace(\"_combined_backup.*\", \"_files.tgz\") }}"
+    dest: "{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}_restored"
+    remote_src: yes
+  become: yes
+
+- name: "Deleting WordPress backup archive file from parallel document root directory."
+  file:
+    path: "{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}_restored/{{ backup_file | regex_replace(\"_combined_backup.*\", \"_files.tgz\") }}"
+    state: absent
+  become: yes
+
+- name: "Setting owner:group of parallel document root directory to {{ nginx.owner }}:{{ nginx.group }}."
+  file:
+    path: "{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}_restored"
+    state: directory
+    owner: "{{ nginx.owner }}"
+    group: "{{ nginx.group }}"
+    recurse: yes
+  become: yes
+
+- name: "Activating site maintenance-mode before restoring WP instance {{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}"
+  shell: wp --allow-root --path='{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}' maintenance-mode activate
+  ignore_errors: yes
+
+- name: "Deleting the entire old document root"
+  file:
+    path: "{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}"
+    state: absent
+  become: yes
+
+- name: "Switching '{{ target_env }}_restore' directory to '{{ target_env }}'"
+  shell: mv '{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}_restored' '{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}'
+  become: yes
+
+- include_tasks: copy_config.yml
+
+- name: "Restoring database dump /tmp/{{ backup_file | regex_replace(\"_combined_backup.*\", \"_db_dump.sql\") }}"
+  shell: wp --allow-root --path='{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}' db import '/tmp/{{ backup_file | regex_replace("_combined_backup.*", "_db_dump.sql") }}'
+
+- name: "Deactivating site maintenance-mode after backing up for WP instance {{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}"
+  shell: "wp --allow-root --path={{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }} maintenance-mode deactivate" 
+  ignore_errors: yes
+
+- name: "Deleting remaining files from /tmp"
+  file:
+    path: "{{ item }}" 
+    state: absent
+  with_items:
+    - "/tmp/{{ backup_file | regex_replace(\"_combined_backup.*\", \"_db_dump.sql\") }}"
+    - "/tmp/{{ backup_file }}"
+  become: yes
+
+

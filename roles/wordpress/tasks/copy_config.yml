@@ -1,0 +1,9 @@
+---
+- name: "(Re)deploying wp-config.php for {{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }} to make sure, that we still use the same database."
+  template:
+    src: "wp-config.php.j2"
+    dest: "{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}/wp-config.php"
+    owner: "{{ nginx.owner }}"
+    group: "{{ nginx.group }}"
+    mode: 0666
+  become: yes

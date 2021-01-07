@@ -1,0 +1,40 @@
+---
+
+- name: "Setting timestamp"
+  shell: "date +%Y%m%d_%H%M%S"
+  register: timestamp
+
+- name: "Activating site maintenance-mode before backing up for WP instance {{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}"
+  shell: "wp --allow-root --path={{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }} maintenance-mode activate" 
+  ignore_errors: yes
+
+- name: "Creating database dump file /tmp/{{ timestamp.stdout }}_{{ target_domain }}_{{ target_env }}_wp_db_dump.sql.gz"
+  shell: "wp --allow-root --add-drop-table --path={{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }} db export - | gzip -9 > /tmp/{{ timestamp.stdout }}_{{ target_domain }}_{{ target_env }}_wp_db_dump.sql.gz"
+
+- name: "Creating WordPress files archive /tmp/{{ timestamp.stdout }}_{{ target_domain }}_{{ target_env }}_wp_files.tgz"
+  archive:
+    path: "{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}/*"
+    dest: "/tmp/{{ timestamp.stdout }}_{{ target_domain }}_{{ target_env }}_wp_files.tgz"
+
+- name: "Deactivating site maintenance-mode after backing up for WP instance {{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}"
+  shell: "wp --allow-root --path={{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }} maintenance-mode deactivate" 
+  ignore_errors: yes
+
+- name: "Creating combined backup file /tmp/{{ timestamp.stdout }}_{{ target_domain }}_{{ target_env }}_wp_combined_backup_{{ backup_comment }}.tgz"
+  archive:
+    path: 
+      - "/tmp/{{ timestamp.stdout }}_{{ target_domain }}_{{ target_env }}_wp_files.tgz"
+      - "/tmp/{{ timestamp.stdout }}_{{ target_domain }}_{{ target_env }}_wp_db_dump.sql.gz"
+    dest: "/tmp/{{ timestamp.stdout }}_{{ target_domain }}_{{ target_env }}_wp_combined_backup_{{ backup_comment }}.tgz"
+
+- name: "Moving backup file into S3 bucket {{ vault.aws.s3_backup_bucket }}"
+  shell: aws s3 mv "/tmp/{{ timestamp.stdout }}_{{ target_domain }}_{{ target_env }}_wp_combined_backup_{{ backup_comment }}.tgz" "s3://{{ vault.aws.s3_backup_bucket }}/{{ target_domain }}/{{ target_env }}/"
+  when: not sync_environments_mode is defined
+
+- name: "Cleaning up /tmp dir."
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "/tmp/{{ timestamp.stdout }}_{{ target_domain }}_{{ target_env }}_wp_files.tgz"
+    - "/tmp/{{ timestamp.stdout }}_{{ target_domain }}_{{ target_env }}_wp_db_dump.sql.gz"

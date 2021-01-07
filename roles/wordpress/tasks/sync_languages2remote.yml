@@ -1,0 +1,15 @@
+---
+- name: "Sync wordpress language files from local directory {{ wp_instance_base_directory }}/{{ inventory_hostname }}/{{ target_domain }}/{{ target_env }}/wp-content/languages/ to the remote server at {{ ansible_user }}@{{ inventory_hostname }}:{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}/wp-content/languages/"
+  
+  local_action: command rsync -avzh --rsync-path "sudo rsync" --include '*/' --include '*.po' --include '*.mo' --exclude '*' {{ wp_instance_base_directory }}/{{ inventory_hostname }}/{{ target_domain }}/{{ target_env }}/wp-content/languages/ {{ ansible_user }}@{{ inventory_hostname }}:{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}/wp-content/languages/ -e "ssh -o StrictHostKeyChecking=no -i {{ ansible_ssh_private_key_file }}"
+
+- name: "Setting wordpress document root owner:group to {{ nginx.owner }}:{{ nginx.group }}"
+  file:
+    path: "{{ nginx.base_directory }}"
+    state: directory
+    owner: "{{ nginx.owner }}"
+    group: "{{ nginx.group }}"
+    recurse: yes
+  become: yes
+
+

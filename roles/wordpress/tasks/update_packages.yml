@@ -1,0 +1,34 @@
+---
+
+- name: "Making sure we have the necessary repository for current php versions"
+  apt_repository:
+    repo: ppa:ondrej/php
+    state: present
+  become: yes
+
+- name: installing wordpress dependencies packages
+  apt:
+    name: "{{ wordpress.packages }}"
+    state: latest
+  become: yes
+
+- name: "Making sure that the config file {{ fpm.php_ini }} contains 'cgi.fix_pathinfo = 0'"
+  lineinfile:
+    path: "{{ fpm.php_ini }}"
+    regex: "^;?\\s*cgi.fix_pathinfo\\s*=\\s*\\d+\\s*$"
+    line: cgi.fix_pathinfo = 0
+  become: yes
+
+- name: "Making sure that the config file {{ fpm.php_ini }} contains 'upload_max_filesize = 64M'"
+  lineinfile:
+    path: "{{ fpm.php_ini }}"
+    regex: "^;?\\s*upload_max_filesize\\s*=.*$"
+    line: "upload_max_filesize = 64M"
+  become: yes
+
+- name: "Making sure that the config file {{ fpm.php_ini }} contains 'post_max_size = 64M'"
+  lineinfile:
+    path: "{{ fpm.php_ini }}"
+    regex: "^;?\\s*post_max_size\\s*=.*$"
+    line: "post_max_size = 64M"
+  become: yes

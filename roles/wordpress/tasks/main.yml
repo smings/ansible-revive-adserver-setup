@@ -1,0 +1,88 @@
+---
+
+# - name: "Some debugging and example of dynamic variable names"
+#   debug:
+#      msg: "Variable '{{ item }}' = '{{ vars[item] }}'"
+#   with_items:
+#     - playbook_dir
+#     - role_path
+#     - inventory_hostname
+
+# - name: "Some debugging and example of dynamic variable names"
+#   debug:
+#      # msg: "Variable '{{ 'vault.' + vars[target_domain] + '.' + vars[target_env] + '.wp_config.DB_PASSWORD' }}'"
+#      msg: "Variable {{ vault[target_domain][target_env].wp_config.DB_PASSWORD }}"
+#      # msg: "Variable '{{ vars[v1] }}'"
+#   vars:
+#     # v1: vault.{{ target_domain }}.{{ target_env }}.wp_config.DB_PASSWORD
+#     v1: vault.smings_de.dev.wp_config.DB_PASSWORD
+
+
+
+- name: "Checking what needs to be done as passed in 'wp_action' = '{{ wp_action }}'"
+  fail:
+    msg: "No valid action passed in 'wp_action' = '{{ wp_action }}'"
+  when: wp_action not in allowed_wp_actions
+
+- name: "Trying to install WordPress if 'wp_action' = 'install'"
+  include_tasks: install.yml
+  when: wp_action == 'install'
+
+- name: "Block for sync tasks if 'wp_action' is in 'sync2local' or 'sync2remote'"
+  block:
+
+    - name: "Reading permissions of default vault password file '{{ wordpress.default_vault_password_file }}'"
+      local_action: "stat path={{ wordpress.default_vault_password_file }}"
+      register: vault_password_file
+    
+    - name: "Checking if the default vault password file '{{ wordpress.default_vault_password_file }}' exists"
+      fail: 
+        msg: "Default vault password file '{{ wordpress.default_vault_password_file }}' not found. Make sure you have it correctly configured."
+      when: vault_password_file.stat.exists == false
+    
+    - name: "Checking if the default vault password file's '{{ wordpress.default_vault_password_file }}' rights are set to 066"
+      fail: msg="Default vault password file '{{ wordpress.default_vault_password_file }}' permissions aren't set to 0600. The password file is compromised. Aborting"
+      when: vault_password_file.stat.mode != '0600'
+    
+    - name: "Checking if the variables target_domain '{{ target_domain }}' and target_env '{{ target_env }}' are set to a valid value within wp_domains and wp_environments of the current host, if wp_action is in 'sync2local' or 'sync2remote'"
+      fail: 
+        msg: "At least one variable isn't set"
+      when: target_domain not in wp_domains or target_env not in wp_environments
+
+    - name: "Sync wordpress directory from remote host {{ inventory_hostname }} {{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }} to local directory {{ wp_instance_base_directory }}/{{ inventory_hostname }}/{{ target_domain }}/{{ target_env }}"
+      local_action: command rsync -avzh --delete {{ ansible_user }}@{{ inventory_hostname }}:{{ nginx.base_directory }}/{{ target_domain }}/{{ target_env }}/* {{ wp_instance_base_directory }}/{{ inventory_hostname }}/{{ target_domain }}/{{ target_env }} {{ rsync_exclude_files }} -e "ssh -o StrictHostKeyChecking=no -i {{ ansible_ssh_private_key_file }}"
+      when: wp_action == 'sync2local'
+
+    - name: "Executing sync from local to remote"
+      include_tasks: sync2remote.yml
+      when: wp_action == 'sync2remote'
+
+  when: wp_action == 'sync2local' or wp_action == 'sync2remote'
+
+- name: "Trying to back up wordpress for {{ target_domain}} / {{ target_env}}"
+  include_tasks: backup.yml
+  when: wp_action == 'backup'
+
+- name: "Trying to restore wordpress for {{ target_domain}} / {{ target_env}}"
+  include_tasks: restore.yml
+  when: wp_action == 'restore'
+
+- name: "Trying to copy wp-config.yml to host."
+  include_tasks: copy_config.yml
+  when: wp_action == 'copy_config'
+
+- name: "Trying to sync dev environment to prod."
+  include_tasks: sync_dev2prod.yml
+  when: wp_action == 'sync_dev2prod'
+
+- name: "Trying to sync prod environment to dev."
+  include_tasks: sync_prod2dev.yml
+  when: wp_action == 'sync_prod2dev'
+
+- name: "Trying to update all wordpress packages."
+  include_tasks: update_packages.yml
+  when: wp_action == 'update_packages'
+
+- name: "Trying to sync all wordpress language files from local to remote."
+  include_tasks: sync_languages2remote.yml
+  when: wp_action == 'sync_languages2remote'
