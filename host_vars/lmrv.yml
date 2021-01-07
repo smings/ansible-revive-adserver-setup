@@ -1,12 +1,14 @@
 ---
-ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+ansible_python_interpreter: "/usr/bin/python3"
+ansible_user: "ubuntu"
 ansible_ssh_host: lmrv.ml
-ansible_ssh_port: 22
-ansible_ssh_user: ubuntu
+ansible_ssh_private_key_file: "~/.ssh/smings"
 
-# these server names will be used within the vhost nginx 
-# configuration as well as for retrieving 
-nginx_server_names: 
-  - "lmrv.ml"
-  - "www.lmrv.ml"
-  - "ad.lmrv.ml"
+certbot:
+  domain_string: "-d lmrv.ml -d ad.lmrv.ml -d www.lmrv.ml"
+  contact_email: "letsencrypt-certs@smings.com"
+
+dns_names: "lmrv.ml ad.lmrv.ml www.lmrv.ml"
+
+# This is always the first domain that is passed on to the certbot
+letsencrypt_cert_dir: lmrv.ml

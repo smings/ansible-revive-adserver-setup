@@ -1,74 +1,25 @@
 ---
 
-- name: "Block for Debian servers"
+- name: Block with sudo escalation
+  become_user: root
   become: yes
   block:
 
-    - name: "Updating all installed packages"
-      apt:
-        upgrade: 'yes'
+    - name: Update all installed packaged system
+      apt: 
+        upgrade: yes 
         update_cache: yes
-
-    - name: "Updating apt cache and installing generic packages"
+      
+    - name: install base packages
       apt:
-        name: "{{ packages.present.generic.common }}"
+        name: "{{ system.packages.present }}"
         state: latest
 
-    # - name: "Installing Debian-specific packages with apt"
-    #   apt:
-    #     name: "{{ packages.present.Debian.common }}"
-    #     state: latest
-
-    - name: "Uninstalling generic packages with apt"
+    - name: uninstall unnecessary packages
       apt:
-        name: "{{ packages.absent.generic.common }}"
+        name: "{{ system.packages.absent }}"
         state: absent
 
-    - name: "Uninstalling Debian-specific packages with apt"
-      apt:
-        name: "{{ packages.absent.Debian.common }}"
-        state: absent
-
-  when: ansible_facts['distribution'] == "Debian"
-
-
-- name: "Block for CentOS servers running yum"
-  become: yes
-  vars:
-    ansible_python_interpreter: "{{ ansible_python2_interpreter }}"
-  block:
-
-    - name: "Updating all yum-installed packages"
-      yum:
-        name: "*"
-        update_cache: yes
-        state: latest
-
-    - name: "Installing generic packages with yum"
-      yum:
-        name: "{{ packages.present.generic.common }}"
-        state: latest
-
-    # - name: "Installing CentOS-specific packages with yum"
-    #   yum:
-    #     name: "{{ packages.present.CentOS.common }}"
-    #     state: latest
-
-    - name: "Uninstalling generic packages with yum"
-      yum:
-        name: "{{ packages.absent.generic.common }}"
-        state: absent
-
-    - name: "Uninstalling CentOS-specific packages with yum"
-      yum:
-        name: "{{ packages.absent.CentOS.common }}"
-        state: absent
-
-  when: ansible_facts['distribution'] == "CentOS"
-
-# Generic tasks, that have to run on all servers
-#
-- name: "Setting timezone to {{ timezone }}"
-  timezone:
-    name: "{{ timezone }}"
-  become: yes
+    - name: set timezone
+      timezone:
+        name: "{{ timezone }}"

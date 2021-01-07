@@ -1,9 +1,0 @@
----
-- name: "rsync dotsource repository on edge server"
-  become: yes
-  become_user: "{{ gateway_webapp.user }}"
-  synchronize:
-    delete: yes
-    src: "{{ dotsource.directory_path_jenkins }}"
-    dest: "{{ dotsource.directory_path_edge }}"
-    owner: no

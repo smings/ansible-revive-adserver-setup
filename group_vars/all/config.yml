@@ -1,69 +1,60 @@
 ---
-ansible_python_interpreter: /usr/bin/python3
-ansible_python2_interpreter: /usr/bin/python2
-
-certbot_contact_email: "your.personal,email@your-companies-domain82347.com"
+fpm: 
+  php_ini: "/etc/php/{{ php.version }}/fpm/php.ini"
+  socket_string: "unix:/run/php/php{{ php.version }}-fpm.sock"
 
 nginx:
-  document_root: /var/www/html
-  basic_auth_file: /etc/nginx/passwd
-  Ubuntu:
-    owner: www-data
-    group: www-data
-  Debian:
-    owner: www-data
-    group: www-data
-  CentOS:
-    owner: nginx
-    group: nginx
+  base_directory: /var/www/html
+  owner: www-data
+  group: www-data
+  vhost_default_file: /etc/nginx/sites-available/default
 
-packages:
-  present:
-    # generic packages are OS-independant packages
-    generic:
-      common:
-        - curl
-        - net-tools
-        - python3-pip
-        - telnet
-        - tree
-        - unzip
-        - vim
-    Debian:
-      # as of now, we don't have any Debian-specific common packages
-      common:
-      nginx:
-        - nginx
-        - software-properties-common
-        - python-certbot-nginx
-        - python-passlib
-        - httpd-tools
-    CentOS:
-      common:
-      docker:
-        - device-mapper-persistent-data
-        - lvm2
-        - yum-utils
-        - docker-ce
-        - docker-ce-cli
-        - containerd.io
-      java:
-        - java-11-openjdk.i686
-      nginx_pre:
-        - epel-release
-      nginx:
-        - nginx.x86_64
-        - certbot-nginx
-        - python-passlib
-        - httpd-tools
-  absent:
-    generic:
-      common:
-    Ubuntu:
-      common:
-    Debian:
-      common:
-    CentOS:
-      common:
+revive_version: 5.0.5
+revive:
+  download_url: https://download.revive-adserver.com/revive-adserver-{{ revive_version }}.tar.gz
+  download_dir: /tmp
 
-timezone: "Europe/Berlin"
+php:
+  version: "7.4"
+
+system:
+  packages:
+    present:
+      - build-essential
+      - dnsutils
+      - inetutils-traceroute
+      - libsasl2-modules
+      - mysql-client
+      - net-tools
+      - pcregrep
+      - "python3-pymysql"
+      - "php{{ php.version }}"
+      - "php{{ php.version }}-cli"
+      - "php{{ php.version }}-curl"
+      - "php{{ php.version }}-fpm"
+      - "php{{ php.version }}-gd"
+      - "php{{ php.version }}-imagick"
+      - "php{{ php.version }}-intl"
+      - "php{{ php.version }}-json"
+      - "php{{ php.version }}-mbstring"
+      - "php{{ php.version }}-mysql"
+      - "php{{ php.version }}-opcache"
+      - "php{{ php.version }}-soap"
+      - "php{{ php.version }}-xml"
+      - "php{{ php.version }}-xmlrpc"
+      - "php{{ php.version }}-zip"
+      - python3-pip
+      - python3-boto
+      - python3-boto3
+      - python3-botocore
+      - python3-dev
+      - python3-pip
+      - software-properties-common
+      - traceroute
+      - unzip
+      - vim
+    absent:
+      - apache2
+      - ufw
+
+timezone: Europe/Berlin
