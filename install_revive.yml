@@ -1,7 +1,0 @@
----
-- hosts: adserver
-  gather_facts: no
-  vars:
-    rv_action: install
-  roles:
-    - revive
