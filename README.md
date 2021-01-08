@@ -27,9 +27,10 @@ After these changes you are already good to go. Make sure your Ubuntu server ins
 
 When you are ready, simply change into the playbook root directory (`~/`) and type `ansible-playbook install.yml`
 
-
-
 When the playbook is done and completed without errors, simply enter your domain name in a browser and continue with the installation of the revive adserver. You will need the MySQL database connection settings for this. After setting up the database, simply enter the data for the admin user and you are good to go with a clean installation of the revive adserver.
 
+## Limitations of this ansible playbook
 
+This playbook simply installs the revive adserver. It doesn't yet provide an automated update path (but it is structurally prepared for it).
 
+This playbook doesn't install a cronjob or any other kind of automation for automatically renewing the ssl certificates initially obtained from letsencrypt's certbot. This can easily be done as a cronjob. It has to be done manually. Remember that letsencrypt certificates expire after 3 months!!!
