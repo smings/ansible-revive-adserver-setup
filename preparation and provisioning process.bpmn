@@ -105,9 +105,39 @@
     </bpmn:subProcess>
     <bpmn:subProcess id="Activity_0myn174" name="Set up DNS">
       <bpmn:incoming>Flow_1pbiaha</bpmn:incoming>
+      <bpmn:outgoing>Flow_1fjw8dx</bpmn:outgoing>
     </bpmn:subProcess>
     <bpmn:sequenceFlow id="Flow_1pdkzmo" sourceRef="Event_0rnkvgt" targetRef="Activity_0ascy4d" />
     <bpmn:sequenceFlow id="Flow_1pbiaha" sourceRef="Activity_0ascy4d" targetRef="Activity_0myn174" />
+    <bpmn:sequenceFlow id="Flow_1fjw8dx" sourceRef="Activity_0myn174" targetRef="Activity_0lykg1o" />
+    <bpmn:userTask id="Activity_0lykg1o" name="Configure Ansible Playbook Hostfile">
+      <bpmn:incoming>Flow_1fjw8dx</bpmn:incoming>
+      <bpmn:outgoing>Flow_1bnujte</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1bnujte" sourceRef="Activity_0lykg1o" targetRef="Activity_0koqxp4" />
+    <bpmn:userTask id="Activity_0koqxp4" name="Run `ansible-playbook install.yml`">
+      <bpmn:incoming>Flow_1bnujte</bpmn:incoming>
+      <bpmn:outgoing>Flow_02kxn1j</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_02kxn1j" sourceRef="Activity_0koqxp4" targetRef="Activity_192v1d1" />
+    <bpmn:userTask id="Activity_192v1d1" name="Open browser and enter chosen domain">
+      <bpmn:incoming>Flow_02kxn1j</bpmn:incoming>
+      <bpmn:outgoing>Flow_14aakqb</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_14aakqb" sourceRef="Activity_192v1d1" targetRef="Activity_1728c4e" />
+    <bpmn:userTask id="Activity_1728c4e" name="Enter Database Data">
+      <bpmn:incoming>Flow_14aakqb</bpmn:incoming>
+      <bpmn:outgoing>Flow_0fkl3gt</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0fkl3gt" sourceRef="Activity_1728c4e" targetRef="Activity_0c6yxij" />
+    <bpmn:userTask id="Activity_0c6yxij" name="Enter admin user data">
+      <bpmn:incoming>Flow_0fkl3gt</bpmn:incoming>
+      <bpmn:outgoing>Flow_0wpgtk4</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_07kn5e3">
+      <bpmn:incoming>Flow_0wpgtk4</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0wpgtk4" sourceRef="Activity_0c6yxij" targetRef="Event_07kn5e3" />
   </bpmn:process>
   <bpmn:process id="Process_1t1gby4" isExecutable="false">
     <bpmn:startEvent id="Event_0h2ltli">
@@ -223,7 +253,7 @@
         <dc:Bounds x="1712" y="542" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Participant_0v8pd7n_di" bpmnElement="Participant_0v8pd7n" isHorizontal="true">
-        <dc:Bounds x="155" y="80" width="600" height="250" />
+        <dc:Bounds x="155" y="80" width="1393" height="250" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1pbiaha_di" bpmnElement="Flow_1pbiaha">
         <di:waypoint x="390" y="200" />
@@ -233,8 +263,50 @@
         <di:waypoint x="238" y="200" />
         <di:waypoint x="290" y="200" />
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1fjw8dx_di" bpmnElement="Flow_1fjw8dx">
+        <di:waypoint x="550" y="200" />
+        <di:waypoint x="610" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1bnujte_di" bpmnElement="Flow_1bnujte">
+        <di:waypoint x="710" y="200" />
+        <di:waypoint x="770" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_02kxn1j_di" bpmnElement="Flow_02kxn1j">
+        <di:waypoint x="870" y="200" />
+        <di:waypoint x="930" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_14aakqb_di" bpmnElement="Flow_14aakqb">
+        <di:waypoint x="1030" y="200" />
+        <di:waypoint x="1090" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fkl3gt_di" bpmnElement="Flow_0fkl3gt">
+        <di:waypoint x="1190" y="200" />
+        <di:waypoint x="1250" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0wpgtk4_di" bpmnElement="Flow_0wpgtk4">
+        <di:waypoint x="1350" y="200" />
+        <di:waypoint x="1412" y="200" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_0rnkvgt_di" bpmnElement="Event_0rnkvgt">
         <dc:Bounds x="202" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1xnbyeo_di" bpmnElement="Activity_0lykg1o">
+        <dc:Bounds x="610" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_03cf4b5_di" bpmnElement="Activity_0koqxp4">
+        <dc:Bounds x="770" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0k2egzi_di" bpmnElement="Activity_192v1d1">
+        <dc:Bounds x="930" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_04botdo_di" bpmnElement="Activity_1728c4e">
+        <dc:Bounds x="1090" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1mhegu7_di" bpmnElement="Activity_0c6yxij">
+        <dc:Bounds x="1250" y="160" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_07kn5e3_di" bpmnElement="Event_07kn5e3">
+        <dc:Bounds x="1412" y="182" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_0p4tty3_di" bpmnElement="Activity_0ascy4d">
         <dc:Bounds x="290" y="160" width="100" height="80" />
